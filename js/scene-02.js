@@ -116,6 +116,11 @@ DVP.register("02", {
     const scene01 = document.getElementById("scene-01");
     const digit = root.querySelector("#clock-digit");
     root.setAttribute("aria-hidden", "false");
+    if (window.matchMedia("(max-width: 720px), (orientation: portrait) and (max-width: 900px)").matches) {
+      const scream = root.querySelector(".agenda__scream");
+      const lastRow = root.querySelector(".agenda__row:last-child");
+      if (scream && lastRow) lastRow.appendChild(scream);
+    }
     root.querySelectorAll(".mark path").forEach((p => {
       try {
         p.style.setProperty("--len", p.getTotalLength().toFixed(2));

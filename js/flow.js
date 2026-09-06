@@ -10,11 +10,12 @@ class FlowSection {
     this.lastP = 0;
   }
   mount(isLast) {
-    const {rotation: rotation, reduced: reduced} = this.art.opts;
+    const {reduced: reduced} = this.art.opts;
+    const rotation = ScrollTrigger.isTouch ? 0 : this.art.opts.rotation;
     gsap.set(this.el, {
       zIndex: this.index + 1
     });
-    if (!reduced) {
+    if (!reduced && rotation) {
       gsap.set(this.inner, {
         rotation: rotation,
         transformOrigin: "bottom left"
@@ -127,6 +128,7 @@ class FlowArt {
     ScrollTrigger.config({
       ignoreMobileResize: true
     });
+    if (ScrollTrigger.isTouch) document.documentElement.classList.add("is-touch");
     this.root.setAttribute("aria-hidden", "false");
     document.documentElement.classList.add("is-scrollable");
     window.scrollTo(0, 0);
