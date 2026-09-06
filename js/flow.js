@@ -7,6 +7,7 @@ class FlowSection {
     this.reveal = el.querySelectorAll(".fl");
     this.placed = false;
     this.paperPlayed = false;
+    this.lastP = 0;
   }
   mount(isLast) {
     const {rotation: rotation, reduced: reduced} = this.art.opts;
@@ -35,14 +36,14 @@ class FlowSection {
       start: "top bottom",
       end: "top top",
       onUpdate: st => this.update(st.progress),
-      snap: {
+      snap: touch ? false : {
         snapTo: [ 0, 1 ],
         directional: false,
         duration: {
           min: .3,
-          max: touch ? .6 : .9
+          max: .9
         },
-        delay: touch ? .15 : .1,
+        delay: .1,
         ease: "power2.inOut"
       }
     });
@@ -57,6 +58,35 @@ class FlowSection {
     const hook = FlowSection.progress[id];
     if (hook) hook(this.el, p);
     if (!this.placed && p > .97) this.place();
+    if (ScrollTrigger.isTouch && !this.art.turning) {
+      const dir = p - this.lastP;
+      this.lastP = p;
+      if (p > .1 && p < .97 && dir > 0) this.turnTo(1); else if (p < .9 && p > .03 && dir < 0) this.turnTo(0);
+    }
+  }
+  turnTo(target) {
+    const top = this.el.offsetTop;
+    const y = target === 1 ? top : top - window.innerHeight;
+    const o = {
+      y: window.scrollY
+    };
+    if (Math.abs(o.y - y) < 2) return;
+    this.art.turning = true;
+    document.documentElement.classList.add("is-turning");
+    gsap.to(o, {
+      y: y,
+      duration: 1.25,
+      ease: "power2.inOut",
+      onUpdate: () => window.scrollTo(0, o.y),
+      onComplete: () => {
+        window.scrollTo(0, y);
+        ScrollTrigger.update();
+        this.lastP = target;
+        if (target === 1 && !this.placed) this.place();
+        document.documentElement.classList.remove("is-turning");
+        this.art.turning = false;
+      }
+    });
   }
   place() {
     this.placed = true;
