@@ -107,6 +107,7 @@ DVP.register("01", {
         document.removeEventListener("click", done);
         document.removeEventListener("keydown", done);
         cueSnd.classList.remove("is-visible");
+        haptic(20);
         Audio.unlock();
         resolve();
       };
