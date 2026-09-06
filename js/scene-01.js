@@ -118,8 +118,14 @@ DVP.register("01", {
       document.addEventListener("keydown", done);
     }));
     let callStarted = false;
+    const gated = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    if (gated) root.classList.add("is-gated");
     (async () => {
       await waitForEntry();
+      if (gated) {
+        root.classList.remove("is-gated");
+        await wait(1e3);
+      }
       await wait(T.silence);
       callStarted = true;
       while (!answered) {
