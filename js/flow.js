@@ -10,8 +10,7 @@ class FlowSection {
     this.lastP = 0;
   }
   mount(isLast) {
-    const {reduced: reduced} = this.art.opts;
-    const rotation = ScrollTrigger.isTouch ? 0 : this.art.opts.rotation;
+    const {reduced: reduced, rotation: rotation} = this.art.opts;
     gsap.set(this.el, {
       zIndex: this.index + 1
     });
@@ -113,7 +112,7 @@ class FlowArt {
   constructor(root, opts = {}) {
     this.root = root;
     this.opts = Object.assign({
-      rotation: 5,
+      rotation: 0,
       reduced: DVP.prefersReducedMotion
     }, opts);
     this.sections = [ ...root.querySelectorAll("[data-flow-section]") ].map(((el, k) => new FlowSection(el, k, this)));
