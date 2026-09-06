@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3efe8">
+  <title>O Diabo Veste Prada · O Musical</title>
+  <meta name="description" content="Uma experiência digital para a montagem brasileira. Abra no celular, com o som ligado, e atenda quando tocar.">
+
+    <meta property="og:type" content="website">
+  <meta property="og:title" content="O Diabo Veste Prada · O Musical">
+  <meta property="og:description" content="Uma experiência digital para a montagem brasileira. Abra no celular, com o som ligado, e atenda quando tocar.">
+  <meta property="og:url" content="https://gabip3.github.io/o-diabo-veste-prada-musical/">
+  <meta property="og:image" content="https://gabip3.github.io/o-diabo-veste-prada-musical/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="O Diabo Veste Prada · O Musical">
+  <meta name="twitter:description" content="Abra no celular, com o som ligado, e atenda quando tocar.">
+  <meta name="twitter:image" content="https://gabip3.github.io/o-diabo-veste-prada-musical/assets/og.jpg">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f7f4ef'/%3E%3Ccircle cx='32' cy='36' r='11' fill='%23b0141c'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Archivo:wght@400;500&family=Homemade+Apple&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css?v=20260906t">
+  <link rel="stylesheet" href="css/scene-01.css?v=20260906t">
+  <link rel="stylesheet" href="css/scene-02.css?v=20260906t">
+  <link rel="stylesheet" href="css/flow.css?v=20260906t">
+</head>
+<body>
+
+    <section class="scene scene-01" id="scene-01" data-scene="01" aria-label="Cena 01">
+
+        <div class="scene-01__surface" aria-hidden="true"></div>
+
+        <figure class="phone" id="phone" role="button" tabindex="0" aria-label="Atender a ligação">
+      <div class="phone__body">
+                <img class="phone__img" src="assets/celular.png" alt="" draggable="false">
+                <span class="phone__glow" aria-hidden="true"></span>
+
+                <div class="phone__placeholder" aria-hidden="true">
+          <span class="phone__hinge"></span>
+          <span class="phone__lens"></span>
+          <span class="phone__screen"></span>
+          <span class="phone__seam"></span>
+        </div>
+      </div>
+    </figure>
+
+        <p class="cue" id="cue-sound" aria-hidden="true">Começar.</p>
+
+        <p class="cue" id="cue" aria-hidden="true">Atenda.</p>
+
+        <div class="dialogue" id="dialogue" aria-live="polite">
+      <p class="dialogue__line" id="line-1">Andrea?</p>
+      <p class="dialogue__line" id="line-2">Meu café.</p>
+      <p class="dialogue__line" id="line-3">Agora.</p>
+    </div>
+
+        <audio id="sfx-ring" src="assets/ringtone.mp3" preload="auto"></audio>
+    <audio id="sfx-answer" src="assets/atender.mp3" preload="auto"></audio>
+
+  </section>
+  
+
+    <section class="scene scene--overlay scene-02" id="scene-02" data-scene="02" aria-label="Cena 02" aria-hidden="true">
+
+        <p class="ed ed--clock" data-beat="clock">
+      <span class="ed__time">07:4<span class="ed__digit" id="clock-digit">2</span></span>
+    </p>
+
+        <h1 class="ed ed--hoje" data-beat="hoje">Hoje</h1>
+    <p class="ed ed--micro ed--date" data-beat="date">Sexta <span class="ed__dash"></span> 05 set.</p>
+    <span class="ed ed--rule" data-beat="rule" aria-hidden="true"></span>
+
+        <ol class="agenda" id="agenda" aria-label="Agenda de hoje">
+      <li class="agenda__row ed" data-beat="r1">
+        <span class="agenda__time"><span class="agenda__anchor">07:45          <img class="doodle doodle--circle" data-beat="m-circle" src="assets/doodles/circle.png" alt="" aria-hidden="true"></span></span>
+        <span class="agenda__title">Café da Miranda</span><img class="doodle doodle--cup" data-beat="d-cup" src="assets/doodles/cup.png" alt="" aria-hidden="true">
+        <span class="agenda__note" data-beat="n1"><img class="agenda__ink" src="assets/doodles/n1-sem-espuma.png" alt="sem espuma!!!"></span>        <img class="doodle doodle--arrow" data-beat="m-arrow" src="assets/doodles/arrow.png" alt="" aria-hidden="true">
+      </li>
+      <li class="agenda__row ed" data-beat="r2">
+        <span class="agenda__time">08:00</span>
+        <span class="agenda__title">Prova de roupa <span class="agenda__sep">·</span> Miranda</span>
+        <span class="agenda__note" data-beat="n2"><img class="agenda__ink" src="assets/doodles/n2-emily.png" alt="confirmar com Emily"></span>
+      </li>
+      <li class="agenda__row ed" data-beat="r3">
+        <span class="agenda__time">08:15</span>
+        <span class="agenda__title">Reunião editorial <span class="agenda__sep">·</span> Runway</span><img class="doodle doodle--star" data-beat="d-star" src="assets/doodles/star.png" alt="" aria-hidden="true">
+        <span class="agenda__note" data-beat="n3"><img class="agenda__ink" src="assets/doodles/n3-amostras.png" alt="levar as amostras"></span>
+      </li>
+      <li class="agenda__row ed" data-beat="r4">
+        <span class="agenda__time">08:30</span>
+        <span class="agenda__title">Nigel</span><img class="doodle doodle--quest" data-beat="d-quest" src="assets/doodles/quest.png" alt="" aria-hidden="true">
+        <span class="agenda__note" data-beat="n4"><img class="agenda__ink" src="assets/doodles/n4-saias.png" alt="buscar saias antes!!"></span>
+      </li>
+      <li class="agenda__row ed" data-beat="r5">
+        <span class="agenda__time">09:00</span>
+        <span class="agenda__title">Miranda <span class="agenda__sep">·</span> Escritório</span>
+        <span class="agenda__note agenda__note--pair" data-beat="n5"><img class="agenda__ink" src="assets/doodles/n5-nao-esquecer.png" alt="não esquecer"><em class="agenda__shout"><img class="agenda__ink agenda__ink--shout" src="assets/doodles/shout-nao-atrasar.png" alt="NÃO ATRASAR"><img class="doodle doodle--under" data-beat="m-under" src="assets/doodles/under.png" alt="" aria-hidden="true"></em></span>
+      </li>
+    </ol>
+
+        <p class="agenda__scream" data-beat="d-spiral" aria-hidden="true"><img class="agenda__ink agenda__ink--scream" src="assets/doodles/scream-aaaa.png" alt=""></p>
+
+    
+        <p class="ed ed--micro ed--continua" id="continua" data-beat="continua" data-cursor="hover" role="button" tabindex="0">continua<span class="ed__hairv" aria-hidden="true"></span></p>
+
+        <audio id="sfx-paper" src="assets/papel.mp3" preload="auto"></audio>
+    <audio id="sfx-click" src="assets/click.mp3" preload="auto"></audio>
+
+  </section>
+  
+
+    <main class="flow" id="flow" data-scene="flow" aria-label="A revista" aria-hidden="true">
+
+        <div class="flow-spacer" aria-hidden="true"></div>
+
+        <section class="flow-section flow-01" data-flow-section aria-label="01 — Runway">
+      <div class="flow-art-container page">
+        <p class="fl page__kicker">01 <span class="ed__dash"></span> Runway</p>
+            <span class="fl page__rule page__rule--top" aria-hidden="true"></span>
+
+        <h2 class="fl page__headline">
+          <span class="page__w">Welcome</span>
+          <span class="page__w page__w--to">to</span>
+          <span class="page__w page__w--runway">Runway<span class="page__dot">.</span></span>
+        </h2>
+
+        <span class="fl page__rule page__rule--mid" aria-hidden="true"></span>
+        <span class="fl page__rule page__rule--v" aria-hidden="true"></span>
+        <p class="fl page__quote">Você não faz ideia<br>de quantas garotas<br>matariam por este emprego.</p>
+      </div>
+    </section>
+
+        <section class="flow-section flow-02" data-flow-section data-flow-id="02" data-flow-silent data-flow-scrub="1.4" aria-label="02 — Editor-in-chief">
+      <div class="flow-art-container page page--miranda">
+
+                <figure class="mp__photo" id="miranda-photo">
+          <img class="mp__img" src="assets/miranda.png" alt="Miranda Priestly" draggable="false">
+          <span class="mp__fpo" aria-hidden="true">Fotografia <span class="ed__dash"></span> Miranda Priestly</span>
+        </figure>
+
+                <p class="fl mp__kicker">02 <span class="ed__dash"></span> Editor-in-chief</p>
+        <p class="fl mp__place">Runway <span class="ed__dash"></span> New York</p>
+        <span class="fl mp__rule" aria-hidden="true"></span>
+
+                <h2 class="mp__name" aria-label="Miranda Priestly">
+          <span class="fl mp__name-line mp__name-line--first">Miranda</span>
+          <span class="fl mp__name-line mp__name-line--last">Priestly.</span>
+        </h2>
+
+                <p class="mp__call mp__call--1" data-call="1">Adorada.</p>
+        <p class="mp__call mp__call--2" data-call="2">Reverenciada.</p>
+        <p class="mp__call mp__call--3" data-call="3">E, acima de tudo,</p>
+        <p class="mp__call mp__call--4" data-call="4">Temida<span class="mp__dot">.</span></p>
+
+                <p class="mp__copy" data-call="5">Miranda Priestly tem a indústria da moda na palma da mão.</p>
+
+      </div>
+    </section>
+
+        <section class="flow-section flow-03" data-flow-section data-flow-id="03" data-flow-silent aria-label="03 — A capa">
+      <div class="flow-art-container page page--cover">
+
+                <p class="cv__edition" id="cover-edition">
+          <span class="cv__edition-brand">Runway</span>
+          <span class="cv__edition-label">Special edition</span>
+        </p>
+
+                <figure class="cv__logo" id="cover-logo">
+          <img class="cv__logo-img" src="assets/logo-musical.png" alt="O Diabo Veste Prada, o musical" draggable="false">
+          <span class="cv__fpo" aria-hidden="true">Logo oficial <span class="ed__dash"></span> assets/logo-musical.png</span>
+        </figure>
+
+                <p class="cv__meta cv__meta--left">São Paulo <span class="ed__dash"></span> 2027</p>
+        <p class="cv__meta cv__meta--right">Teatro Santander</p>
+
+      </div>
+    </section>
+
+        <section class="flow-section flow-04" data-flow-section data-flow-id="04" aria-label="Última página">
+      <div class="flow-art-container page page--pitch">
+
+        <span class="pt__rule" data-pitch="rule" aria-hidden="true"></span>
+
+        <p class="pt__ask" data-pitch="ask">Gostou?</p>
+        <h2 class="pt__hire" aria-label="Me contrate.">
+          <span class="pt__hire-line" data-pitch="hire1">Me</span>
+          <span class="pt__hire-line" data-pitch="hire2">Contrate<span class="pt__dot">.</span></span>
+        </h2>
+
+        <p class="pt__credit" data-pitch="credit">
+          Conceito criativo, UX/UI e desenvolvimento<br>por Gabriella Costa.
+        </p>
+
+        <a class="pt__cta" id="pitch-cta" data-pitch="cta" data-cursor="hover" href="#" target="_blank" rel="noopener">
+          <span class="pt__cta-text">Fale comigo</span><span class="pt__cta-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <p class="pt__end" data-pitch="end">That’s all.</p>
+
+      </div>
+    </section>
+
+  </main>
+  
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/core.js?v=20260906t"></script>
+  <script src="js/scene-01.js?v=20260906t"></script>
+  <script src="js/scene-02.js?v=20260906t"></script>
+  <script src="js/flow.js?v=20260906t"></script>
+  <script src="js/flow-02.js?v=20260906t"></script>
+  <script src="js/flow-03.js?v=20260906t"></script>
+  <script src="js/flow-04.js?v=20260906t"></script>
+</body>
+</html>
