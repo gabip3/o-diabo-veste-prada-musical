@@ -118,8 +118,11 @@ DVP.register("01", {
       document.addEventListener("keydown", done);
     }));
     let callStarted = false;
-    const gated = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    if (gated) root.classList.add("is-gated");
+    const gated = true;
+    const touch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const gate = root.querySelector("#gate");
+    if (gate && !touch) gate.innerHTML = "Para uma melhor experiência,<br>certifique-se de que o som está ligado.";
+    root.classList.add("is-gated");
     (async () => {
       await waitForEntry();
       if (gated) {
