@@ -26,8 +26,8 @@ class FlowSection {
         scrollTrigger: {
           trigger: this.el,
           start: "top bottom",
-          end: "top 55%",
-          scrub: ScrollTrigger.isTouch ? true : parseFloat(this.el.dataset.flowScrub) || .5
+          end: "top 15%",
+          scrub: ScrollTrigger.isTouch ? true : parseFloat(this.el.dataset.flowScrub) || 1.3
         }
       });
     }
@@ -113,7 +113,7 @@ class FlowArt {
   constructor(root, opts = {}) {
     this.root = root;
     this.opts = Object.assign({
-      rotation: 7,
+      rotation: 5,
       reduced: DVP.prefersReducedMotion
     }, opts);
     this.sections = [ ...root.querySelectorAll("[data-flow-section]") ].map(((el, k) => new FlowSection(el, k, this)));
