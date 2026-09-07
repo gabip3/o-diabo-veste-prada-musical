@@ -1,13 +1,11 @@
 (function() {
   "use strict";
-  window.addEventListener("load", (() => {
-    const logo = document.getElementById("cover-logo");
-    const img = logo && logo.querySelector(".cv__logo-img");
-    if (!img) return;
+  const logo = document.getElementById("cover-logo");
+  const img = logo && logo.querySelector(".cv__logo-img");
+  if (img) {
     const usePlaceholder = () => logo.classList.add("has-placeholder");
-    if (img.complete && img.naturalWidth === 0) usePlaceholder();
-    img.addEventListener("error", usePlaceholder);
-  }));
+    DVP.loadImageResilient(img, usePlaceholder);
+  }
   const T = {
     breath: 1,
     logo: 1,

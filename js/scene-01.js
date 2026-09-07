@@ -29,10 +29,9 @@ DVP.register("01", {
         root.style.setProperty("--phone-ratio", (img.naturalWidth / img.naturalHeight).toFixed(4));
       }
     };
-    if (img.complete && img.naturalWidth === 0) usePlaceholder();
-    if (img.complete && img.naturalWidth > 0) useImageRatio();
-    img.addEventListener("error", usePlaceholder);
     img.addEventListener("load", useImageRatio);
+    if (img.complete && img.naturalWidth > 0) useImageRatio();
+    DVP.loadImageResilient(img, usePlaceholder);
     const ring = Audio.create(ringEl, ((ctx, offset) => synthRing(ctx, T.ringPattern, offset)));
     const answer = Audio.create(root.querySelector("#sfx-answer"), synthAnswer);
     let answered = false;

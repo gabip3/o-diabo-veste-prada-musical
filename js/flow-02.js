@@ -1,13 +1,11 @@
 (function() {
   "use strict";
-  window.addEventListener("load", (() => {
-    const photo = document.getElementById("miranda-photo");
-    const img = photo && photo.querySelector(".mp__img");
-    if (!img) return;
+  const photo = document.getElementById("miranda-photo");
+  const img = photo && photo.querySelector(".mp__img");
+  if (img) {
     const usePlaceholder = () => photo.classList.add("has-placeholder");
-    if (img.complete && img.naturalWidth === 0) usePlaceholder();
-    img.addEventListener("error", usePlaceholder);
-  }));
+    DVP.loadImageResilient(img, usePlaceholder);
+  }
   const T = {
     furniture: .15,
     adorada: .9,

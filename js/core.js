@@ -153,12 +153,32 @@ window.DVP = function() {
     initCursor();
     start("01");
   }));
+  function loadImageResilient(img, onGiveUp, tries) {
+    tries = tries || 2;
+    const original = img.getAttribute("src");
+    if (!original) return;
+    let attempt = 0;
+    const retry = () => {
+      if (img.complete && img.naturalWidth > 0) return;
+      if (attempt >= tries) {
+        onGiveUp();
+        return;
+      }
+      attempt++;
+      setTimeout((() => {
+        img.src = original + "?retry=" + attempt + "-" + Date.now();
+      }), 500 * attempt);
+    };
+    img.addEventListener("error", retry);
+    if (img.complete && img.naturalWidth === 0) retry();
+  }
   return {
     wait: wait,
     prefersReducedMotion: prefersReducedMotion,
     Audio: AudioCore,
     register: register,
     start: start,
-    complete: complete
+    complete: complete,
+    loadImageResilient: loadImageResilient
   };
 }();
