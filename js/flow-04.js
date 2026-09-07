@@ -27,42 +27,22 @@
       opacity: 1,
       stagger: .08
     }, T.furniture);
-    tl.fromTo(q("ask"), {
-      opacity: 0,
-      y: 8
-    }, {
-      opacity: 1,
-      y: 0
+    tl.to(q("ask"), {
+      opacity: 1
     }, T.ask);
-    tl.fromTo(q("hire1"), {
-      opacity: 0,
-      y: 16
-    }, {
+    tl.to(q("hire1"), {
       opacity: 1,
-      y: 0,
       duration: 1.7
     }, T.hire1);
-    tl.fromTo(q("hire2"), {
-      opacity: 0,
-      y: 16
-    }, {
+    tl.to(q("hire2"), {
       opacity: 1,
-      y: 0,
       duration: 1.7
     }, T.hire2);
-    tl.fromTo(q("credit"), {
-      opacity: 0,
-      y: 6
-    }, {
-      opacity: 1,
-      y: 0
+    tl.to(q("credit"), {
+      opacity: 1
     }, T.credit);
-    tl.fromTo(q("cta"), {
-      opacity: 0,
-      y: 6
-    }, {
-      opacity: 1,
-      y: 0
+    tl.to(q("cta"), {
+      opacity: 1
     }, T.cta);
     tl.to(q("end"), {
       opacity: 1,

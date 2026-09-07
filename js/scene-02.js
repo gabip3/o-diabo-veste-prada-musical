@@ -56,10 +56,6 @@ DVP.register("02", {
     in: 380,
     sfx: "paper"
   }, {
-    at: 2450,
-    el: "d-cup",
-    in: 700
-  }, {
     at: 2700,
     el: "n2",
     in: 500,

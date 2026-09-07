@@ -40,31 +40,23 @@
     }, 0);
     tl.to(section.querySelectorAll(".fl"), {
       opacity: 1,
-      y: 0,
-      stagger: .08,
-      clearProps: "transform"
+      duration: 1.3,
+      stagger: .08
     }, T.furniture);
     tl.to(call(1), {
       opacity: 1,
-      y: 0,
       duration: 1.2
     }, T.adorada);
     tl.to(call(2), {
       opacity: 1,
-      y: 0,
       duration: 1.2
     }, T.reverenc);
     tl.to(call(3), {
       opacity: 1,
-      y: 0,
       duration: 1
     }, T.acima);
-    tl.fromTo(call(4), {
-      opacity: 0,
-      y: 14
-    }, {
+    tl.to(call(4), {
       opacity: 1,
-      y: 0,
       duration: 1.6,
       ease: "power2.out"
     }, T.temida);
@@ -75,7 +67,6 @@
     }, T.dot);
     tl.to(call(5), {
       opacity: 1,
-      y: 0,
       duration: 1.3
     }, T.copy);
     DVP.debug = Object.assign(DVP.debug || {}, {

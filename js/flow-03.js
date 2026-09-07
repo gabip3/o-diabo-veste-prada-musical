@@ -24,7 +24,7 @@
     tl.fromTo(logo, {
       opacity: 0,
       scale: .965,
-      y: 10,
+      y: 0,
       xPercent: -50,
       yPercent: -50
     }, {

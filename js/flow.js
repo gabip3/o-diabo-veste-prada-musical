@@ -95,11 +95,9 @@ class FlowSection {
     if (custom) return custom(this.el, this);
     gsap.to(this.reveal, {
       opacity: 1,
-      y: 0,
-      duration: 1.1,
-      stagger: .11,
-      ease: "power3.out",
-      clearProps: "transform"
+      duration: 1.4,
+      stagger: .12,
+      ease: "power2.out"
     });
   }
 }
