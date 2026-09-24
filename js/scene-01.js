@@ -13,7 +13,11 @@ DVP.register("01", {
   },
   init(root) {
     const {wait: wait, Audio: Audio} = DVP;
-    const T = this.timing;
+    const MSG_ON_TOUCH = false;
+    const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const msgMode = new URLSearchParams(location.search).get("msg") === "1" || MSG_ON_TOUCH && isTouch;
+    const T = Object.assign({}, this.timing);
+    if (msgMode) T.afterAnswer = 350;
     const phone = root.querySelector("#phone");
     const img = root.querySelector(".phone__img");
     const cue = root.querySelector("#cue");
@@ -23,6 +27,7 @@ DVP.register("01", {
     const line3 = root.querySelector("#line-3");
     const cursor = document.getElementById("cursor");
     const ringEl = root.querySelector("#sfx-ring");
+    const notice = root.querySelector("#notice");
     const usePlaceholder = () => phone.classList.add("has-placeholder");
     const useImageRatio = () => {
       if (img.naturalWidth && img.naturalHeight) {
@@ -34,6 +39,7 @@ DVP.register("01", {
     DVP.loadImageResilient(img, usePlaceholder);
     const ring = Audio.create(ringEl, ((ctx, offset) => synthRing(ctx, T.ringPattern, offset)));
     const answer = Audio.create(root.querySelector("#sfx-answer"), synthAnswer);
+    const msgSnd = Audio.create(null, synthMessage);
     let answered = false;
     let cycleStart = null;
     let cueShown = false;
@@ -122,6 +128,32 @@ DVP.register("01", {
     const gate = root.querySelector("#gate");
     if (gate && !touch) gate.innerHTML = "Para uma melhor experiência,<br>certifique-se de que o som esteja ligado.";
     root.classList.add("is-gated");
+    if (msgMode) {
+      root.classList.add("is-msg");
+      phone.removeAttribute("role");
+      phone.removeAttribute("tabindex");
+      phone.setAttribute("aria-hidden", "true");
+      cue.textContent = "Abra.";
+    }
+    const notifyLoop = async () => {
+      let first = true;
+      while (!answered) {
+        notice.classList.add("is-in");
+        notice.classList.remove("is-buzz");
+        void notice.offsetWidth;
+        notice.classList.add("is-buzz");
+        msgSnd.play(0);
+        haptic(first ? [ 70, 90, 70, 220, 70, 90, 70 ] : [ 60, 80, 60 ]);
+        if (first) {
+          first = false;
+          await wait(1700);
+          if (answered) return;
+          cue.classList.add("is-visible");
+          notice.setAttribute("data-cursor", "hover");
+        }
+        await wait(6500);
+      }
+    };
     (async () => {
       await waitForEntry();
       if (gated) {
@@ -130,6 +162,10 @@ DVP.register("01", {
       }
       await wait(T.silence);
       callStarted = true;
+      if (msgMode) {
+        await notifyLoop();
+        return;
+      }
       while (!answered) {
         await runRingCycle();
         if (answered) return;
@@ -139,6 +175,11 @@ DVP.register("01", {
     const onAnswer = async () => {
       if (answered || !callStarted) return;
       answered = true;
+      if (msgMode) {
+        notice.classList.add("is-opened");
+        notice.removeAttribute("data-cursor");
+        notice.disabled = true;
+      }
       ring.stop();
       cycleStart = null;
       phone.classList.remove("is-ringing");
@@ -161,6 +202,7 @@ DVP.register("01", {
       DVP.complete("01");
     };
     phone.addEventListener("click", onAnswer);
+    notice.addEventListener("click", onAnswer);
     phone.addEventListener("keydown", (e => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
@@ -224,4 +266,31 @@ function synthAnswer(ctx) {
       osc.stop();
     } catch (e) {}
   };
+}
+
+function synthMessage(ctx) {
+  const t0 = ctx.currentTime;
+  const master = ctx.createGain();
+  master.gain.value = 1;
+  master.connect(ctx.destination);
+  const oscs = [];
+  [ [ 1174.7, 0 ], [ 1568, .14 ], [ 1174.7, .46 ], [ 1568, .6 ] ].forEach((([f, dt]) => {
+    const o = ctx.createOscillator();
+    o.type = "sine";
+    o.frequency.value = f;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(1e-4, t0 + dt);
+    g.gain.exponentialRampToValueAtTime(.16, t0 + dt + .01);
+    g.gain.exponentialRampToValueAtTime(1e-4, t0 + dt + .24);
+    o.connect(g);
+    g.connect(master);
+    o.start(t0 + dt);
+    o.stop(t0 + dt + .27);
+    oscs.push(o);
+  }));
+  return () => oscs.forEach((o => {
+    try {
+      o.stop();
+    } catch (e) {}
+  }));
 }
