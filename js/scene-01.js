@@ -111,10 +111,20 @@ DVP.register("01", {
       }), 40);
     }));
     const waitForEntry = () => new Promise((resolve => {
+      let y0 = null;
+      const onStart = e => {
+        y0 = e.touches[0].clientY;
+      };
+      const onEnd = e => {
+        if (y0 !== null && y0 - e.changedTouches[0].clientY > 40) done(e);
+        y0 = null;
+      };
       const done = e => {
         if (e.type === "keydown" && ![ "Enter", " " ].includes(e.key)) return;
         document.removeEventListener("click", done);
         document.removeEventListener("keydown", done);
+        document.removeEventListener("touchstart", onStart);
+        document.removeEventListener("touchend", onEnd);
         cueSnd.classList.remove("is-visible");
         haptic(20);
         Audio.unlock();
@@ -125,7 +135,15 @@ DVP.register("01", {
       }), T.soundCueDelay);
       document.addEventListener("click", done);
       document.addEventListener("keydown", done);
-      if (msgMode) setTimeout(resolve, 6e3);
+      if (msgMode) {
+        document.addEventListener("touchstart", onStart, {
+          passive: true
+        });
+        document.addEventListener("touchend", onEnd, {
+          passive: true
+        });
+        setTimeout(resolve, 6e3);
+      }
     }));
     let callStarted = false;
     const gated = true;
