@@ -13,9 +13,9 @@ DVP.register("01", {
   },
   init(root) {
     const {wait: wait, Audio: Audio} = DVP;
-    const MSG_ON_TOUCH = false;
-    const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const msgMode = new URLSearchParams(location.search).get("msg") === "1" || MSG_ON_TOUCH && isTouch;
+    const modo = document.documentElement.getAttribute("data-modo");
+    const msgMode = !!modo;
+    const callMode = modo === "chamada";
     const T = Object.assign({}, this.timing);
     if (msgMode) T.silence = 500;
     const phone = root.querySelector("#phone");
@@ -110,7 +110,75 @@ DVP.register("01", {
         if (fileEnded || t >= ringDuration()) finish();
       }), 40);
     }));
+    const slideToAnswer = resolve => {
+      const slide = root.querySelector("#call-slide");
+      const knob = root.querySelector("#call-knob");
+      const label = root.querySelector(".call__label");
+      let x0 = null, dx = 0, max = 0, moved = false;
+      const finish = () => {
+        slide.removeEventListener("pointerdown", down);
+        slide.removeEventListener("pointermove", move);
+        slide.removeEventListener("pointerup", up);
+        slide.removeEventListener("pointercancel", up);
+        slide.removeEventListener("keydown", key);
+        knob.style.transition = "transform .22s ease-out";
+        knob.style.transform = "translateX(" + max + "px)";
+        root.classList.add("is-answering");
+        haptic(20);
+        Audio.unlock();
+        setTimeout(resolve, 260);
+      };
+      const down = e => {
+        x0 = e.clientX;
+        dx = 0;
+        moved = false;
+        max = slide.clientWidth - knob.offsetWidth - 8;
+        knob.style.transition = "none";
+        try {
+          slide.setPointerCapture(e.pointerId);
+        } catch (err) {}
+      };
+      const move = e => {
+        if (x0 === null) return;
+        dx = Math.max(0, Math.min(max, e.clientX - x0));
+        if (dx > 6) moved = true;
+        knob.style.transform = "translateX(" + dx + "px)";
+        label.style.opacity = String(Math.max(0, 1 - dx / (max * .55)));
+      };
+      const up = () => {
+        if (x0 === null) return;
+        x0 = null;
+        if (dx > max * .72) {
+          finish();
+          return;
+        }
+        knob.style.transition = "transform .28s ease-out";
+        knob.style.transform = "";
+        label.style.opacity = "";
+        if (!moved) {
+          slide.classList.remove("is-nudge");
+          void slide.offsetWidth;
+          slide.classList.add("is-nudge");
+        }
+      };
+      const key = e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          max = slide.clientWidth - knob.offsetWidth - 8;
+          finish();
+        }
+      };
+      slide.addEventListener("pointerdown", down);
+      slide.addEventListener("pointermove", move);
+      slide.addEventListener("pointerup", up);
+      slide.addEventListener("pointercancel", up);
+      slide.addEventListener("keydown", key);
+    };
     const waitForEntry = () => new Promise((resolve => {
+      if (callMode) {
+        slideToAnswer(resolve);
+        return;
+      }
       let y0 = null;
       const onStart = e => {
         y0 = e.touches[0].clientY;
@@ -158,6 +226,7 @@ DVP.register("01", {
       phone.removeAttribute("tabindex");
       phone.setAttribute("aria-hidden", "true");
       cue.textContent = "Abra.";
+      if (callMode) root.classList.add("is-call");
       root.classList.add("is-awake");
     }
     const MSGS = [ "Andrea?", "Andrea.", "?????", "Meu café.", "Agora." ];
@@ -284,7 +353,23 @@ DVP.register("01", {
       openResolve();
       chatPhase();
     };
+    const lockMissedCall = () => {
+      const card = noticeTpl.content.firstElementChild.cloneNode(true);
+      card.querySelector(".notice__body").textContent = "Chamada perdida";
+      const ic = card.querySelector(".notice__icon");
+      ic.classList.add("notice__icon--phone");
+      ic.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z" fill="#fff"/></svg>';
+      stackEl.appendChild(card);
+      msgSnd.play(0);
+      haptic([ 220 ]);
+    };
     const runMessages = async () => {
+      if (callMode) {
+        await wait(650);
+        lockMissedCall();
+        await sleep(1300);
+        if (opened) return;
+      }
       root.addEventListener("click", openChat);
       document.addEventListener("keydown", (e => {
         if (e.key === "Enter" || e.key === " ") {
