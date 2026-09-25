@@ -276,10 +276,10 @@ DVP.register("01", {
         await sleep(i === 0 ? 0 : i === 1 ? 1500 : 1400);
         if (opened) return;
         lockDeliver(i);
-        if (i === 0) sleep(1700).then((() => {
-          if (!opened) cue.classList.add("is-visible");
-        }));
       }
+      sleep(900).then((() => {
+        if (!opened) cue.classList.add("is-visible");
+      }));
       while (!opened) {
         await sleep(7e3);
         if (opened) return;
