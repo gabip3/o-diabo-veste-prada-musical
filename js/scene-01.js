@@ -119,15 +119,12 @@ DVP.register("01", {
         Audio.unlock();
         resolve();
       };
-      setTimeout((() => {
+      if (!msgMode) setTimeout((() => {
         cueSnd.classList.add("is-visible");
-      }), msgMode ? 1200 : T.soundCueDelay);
+      }), T.soundCueDelay);
       document.addEventListener("click", done);
       document.addEventListener("keydown", done);
-      if (msgMode) setTimeout((() => {
-        cueSnd.classList.remove("is-visible");
-        resolve();
-      }), 7e3);
+      if (msgMode) resolve();
     }));
     let callStarted = false;
     const gated = true;
@@ -142,7 +139,6 @@ DVP.register("01", {
       phone.removeAttribute("tabindex");
       phone.setAttribute("aria-hidden", "true");
       cue.textContent = "Abra.";
-      cueSnd.textContent = "Toque para acordar.";
       root.classList.add("is-awake");
     }
     const MSGS = [ "Andrea?", "Andrea.", "?????", "Meu café.", "Agora." ];
@@ -285,12 +281,6 @@ DVP.register("01", {
       sleep(900).then((() => {
         if (!opened) cue.classList.add("is-visible");
       }));
-      while (!opened) {
-        await sleep(7e3);
-        if (opened) return;
-        msgSnd.play(0);
-        haptic([ 60, 80, 60 ]);
-      }
     };
     (async () => {
       await waitForEntry();
