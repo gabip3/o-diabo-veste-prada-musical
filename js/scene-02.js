@@ -117,6 +117,22 @@ DVP.register("02", {
       const lastRow = root.querySelector(".agenda__row:last-child");
       if (scream && lastRow) lastRow.appendChild(scream);
     }
+    if (document.documentElement.classList.contains("is-msg")) {
+      const cont0 = root.querySelector("#continua");
+      const agenda = root.querySelector("#agenda");
+      const place = () => {
+        const sc = root.getBoundingClientRect();
+        const ag = agenda.getBoundingClientRect();
+        const h = cont0.offsetHeight || 44;
+        const top = Math.min(ag.bottom - sc.top + 12, sc.height - h - 8);
+        cont0.style.top = Math.max(0, top) + "px";
+        cont0.style.bottom = "auto";
+      };
+      place();
+      if (window.ResizeObserver) new ResizeObserver(place).observe(agenda);
+      window.addEventListener("resize", place);
+      window.addEventListener("load", place);
+    }
     root.querySelectorAll(".mark path").forEach((p => {
       try {
         p.style.setProperty("--len", p.getTotalLength().toFixed(2));

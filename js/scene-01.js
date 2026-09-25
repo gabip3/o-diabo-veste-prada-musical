@@ -119,12 +119,15 @@ DVP.register("01", {
         Audio.unlock();
         resolve();
       };
-      if (!msgMode) setTimeout((() => {
+      setTimeout((() => {
         cueSnd.classList.add("is-visible");
-      }), T.soundCueDelay);
+      }), msgMode ? 1200 : T.soundCueDelay);
       document.addEventListener("click", done);
       document.addEventListener("keydown", done);
-      if (msgMode) resolve();
+      if (msgMode) setTimeout((() => {
+        cueSnd.classList.remove("is-visible");
+        resolve();
+      }), 7e3);
     }));
     let callStarted = false;
     const gated = true;
@@ -139,6 +142,8 @@ DVP.register("01", {
       phone.removeAttribute("tabindex");
       phone.setAttribute("aria-hidden", "true");
       cue.textContent = "Abra.";
+      cueSnd.textContent = "Toque para acordar.";
+      root.classList.add("is-awake");
     }
     const MSGS = [ "Andrea?", "Andrea.", "?????", "Meu café.", "Agora." ];
     const LOCK_COUNT = 3;
