@@ -192,7 +192,31 @@ DVP.register("01", {
         haptic(18);
         await wait(700);
       }
-      await wait(400);
+      await wait(1300);
+      cue.textContent = "Corra.";
+      cue.classList.add("is-visible");
+      if (cursor) cursor.classList.add("is-hover");
+      await new Promise((resolve => {
+        const go = () => {
+          root.removeEventListener("click", go);
+          document.removeEventListener("keydown", onKey);
+          resolve();
+        };
+        const onKey = e => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            go();
+          }
+        };
+        setTimeout((() => {
+          root.addEventListener("click", go);
+          document.addEventListener("keydown", onKey);
+        }), 500);
+      }));
+      haptic(30);
+      cue.classList.remove("is-visible");
+      if (cursor) cursor.classList.remove("is-hover");
+      await wait(250);
       root.classList.add("is-complete");
       DVP.complete("01");
     };
