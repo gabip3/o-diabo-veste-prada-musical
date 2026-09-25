@@ -390,26 +390,25 @@ function synthPop(ctx) {
 function synthMessage(ctx) {
   const t0 = ctx.currentTime;
   const master = ctx.createGain();
-  master.gain.value = 1;
   master.connect(ctx.destination);
   const oscs = [];
-  [ [ 1174.7, 0 ], [ 1568, .14 ], [ 1174.7, .46 ], [ 1568, .6 ] ].forEach((([f, dt]) => {
+  [ [ 1318.5, 1, .2 ], [ 2637, 1, .05 ] ].forEach((([f, , amp]) => {
     const o = ctx.createOscillator();
     o.type = "sine";
     o.frequency.value = f;
     const g = ctx.createGain();
-    g.gain.setValueAtTime(1e-4, t0 + dt);
-    g.gain.exponentialRampToValueAtTime(.16, t0 + dt + .01);
-    g.gain.exponentialRampToValueAtTime(1e-4, t0 + dt + .24);
+    g.gain.setValueAtTime(1e-4, t0);
+    g.gain.exponentialRampToValueAtTime(amp, t0 + .008);
+    g.gain.exponentialRampToValueAtTime(1e-4, t0 + .55);
     o.connect(g);
     g.connect(master);
-    o.start(t0 + dt);
-    o.stop(t0 + dt + .27);
+    o.start(t0);
+    o.stop(t0 + .6);
     oscs.push(o);
   }));
   return () => oscs.forEach((o => {
     try {
       o.stop();
-    } catch (e) {}
+    } catch (err) {}
   }));
 }
