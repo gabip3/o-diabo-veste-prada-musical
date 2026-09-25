@@ -17,7 +17,6 @@ DVP.register("01", {
     const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
     const msgMode = new URLSearchParams(location.search).get("msg") === "1" || MSG_ON_TOUCH && isTouch;
     const T = Object.assign({}, this.timing);
-    if (msgMode) T.afterAnswer = 350;
     const phone = root.querySelector("#phone");
     const img = root.querySelector(".phone__img");
     const cue = root.querySelector("#cue");
@@ -27,7 +26,10 @@ DVP.register("01", {
     const line3 = root.querySelector("#line-3");
     const cursor = document.getElementById("cursor");
     const ringEl = root.querySelector("#sfx-ring");
-    const notice = root.querySelector("#notice");
+    const stackEl = root.querySelector("#stack");
+    const chatEl = root.querySelector("#chat");
+    const listEl = root.querySelector("#chat-list");
+    const noticeTpl = root.querySelector("#notice-tpl");
     const usePlaceholder = () => phone.classList.add("has-placeholder");
     const useImageRatio = () => {
       if (img.naturalWidth && img.naturalHeight) {
@@ -40,6 +42,7 @@ DVP.register("01", {
     const ring = Audio.create(ringEl, ((ctx, offset) => synthRing(ctx, T.ringPattern, offset)));
     const answer = Audio.create(root.querySelector("#sfx-answer"), synthAnswer);
     const msgSnd = Audio.create(null, synthMessage);
+    const popSnd = Audio.create(null, synthPop);
     let answered = false;
     let cycleStart = null;
     let cueShown = false;
@@ -135,20 +138,98 @@ DVP.register("01", {
       phone.setAttribute("aria-hidden", "true");
       cue.textContent = "Abra.";
     }
-    const notifyLoop = async () => {
-      let first = true;
-      while (!answered) {
-        notice.classList.add("is-in");
-        msgSnd.play(0);
-        haptic(first ? [ 70, 90, 70, 220, 70, 90, 70 ] : [ 60, 80, 60 ]);
-        if (first) {
-          first = false;
-          await wait(1700);
-          if (answered) return;
-          cue.classList.add("is-visible");
-          notice.setAttribute("data-cursor", "hover");
+    const MSGS = [ "Andrea?", "Andrea.", "?????", "Meu café.", "Agora." ];
+    const LOCK_COUNT = 3;
+    let delivered = 0;
+    let opened = false;
+    let openResolve;
+    const openedP = new Promise((r => {
+      openResolve = r;
+    }));
+    const sleep = ms => Promise.race([ wait(ms), openedP ]);
+    const lockDeliver = i => {
+      const card = noticeTpl.content.firstElementChild.cloneNode(true);
+      card.querySelector(".notice__body").textContent = MSGS[i];
+      stackEl.appendChild(card);
+      delivered = i + 1;
+      msgSnd.play(0);
+      haptic(i === 0 ? [ 70, 90, 70, 220, 70, 90, 70 ] : [ 60, 80, 60 ]);
+    };
+    const scrollList = () => {
+      listEl.scrollTop = listEl.scrollHeight;
+    };
+    const demoteLast = () => {
+      const prev = listEl.querySelector(".bubble.is-last");
+      if (prev) prev.classList.remove("is-last");
+    };
+    const addBubble = text => {
+      demoteLast();
+      const b = document.createElement("div");
+      b.className = "bubble is-last";
+      b.textContent = text;
+      listEl.appendChild(b);
+      scrollList();
+    };
+    const showTyping = () => {
+      demoteLast();
+      const t = document.createElement("div");
+      t.className = "bubble is-last typing";
+      t.innerHTML = "<i></i><i></i><i></i>";
+      listEl.appendChild(t);
+      scrollList();
+      return t;
+    };
+    const chatPhase = async () => {
+      await wait(900);
+      while (delivered < MSGS.length) {
+        const t = showTyping();
+        await wait(delivered === 3 ? 1200 : 800);
+        t.remove();
+        addBubble(MSGS[delivered]);
+        delivered += 1;
+        popSnd.play(0);
+        haptic(18);
+        await wait(700);
+      }
+      await wait(400);
+      root.classList.add("is-complete");
+      DVP.complete("01");
+    };
+    const openChat = () => {
+      if (opened || !callStarted || delivered < 1) return;
+      opened = true;
+      answered = true;
+      haptic(0);
+      cue.classList.remove("is-visible");
+      if (cursor) cursor.classList.remove("is-hover");
+      root.classList.add("is-unlocked");
+      for (let i = 0; i < delivered; i++) addBubble(MSGS[i]);
+      chatEl.setAttribute("aria-hidden", "false");
+      chatEl.classList.add("is-open");
+      openResolve();
+      chatPhase();
+    };
+    const runMessages = async () => {
+      root.addEventListener("click", openChat);
+      document.addEventListener("keydown", (e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openChat();
         }
-        await wait(6500);
+      }));
+      for (let i = 0; i < LOCK_COUNT; i++) {
+        await sleep(i === 0 ? 0 : i === 1 ? 1500 : 1400);
+        if (opened) return;
+        lockDeliver(i);
+        if (i === 0) sleep(1700).then((() => {
+          if (!opened) cue.classList.add("is-visible");
+        }));
+      }
+      while (!opened) {
+        await sleep(7e3);
+        if (opened) return;
+        msgSnd.play(0);
+        haptic([ 60, 80, 60 ]);
       }
     };
     (async () => {
@@ -161,7 +242,7 @@ DVP.register("01", {
       await wait(T.silence);
       callStarted = true;
       if (msgMode) {
-        await notifyLoop();
+        await runMessages();
         return;
       }
       while (!answered) {
@@ -173,12 +254,6 @@ DVP.register("01", {
     const onAnswer = async () => {
       if (answered || !callStarted) return;
       answered = true;
-      if (msgMode) {
-        root.classList.add("is-unlocked");
-        notice.classList.add("is-opened");
-        notice.removeAttribute("data-cursor");
-        notice.disabled = true;
-      }
       ring.stop();
       cycleStart = null;
       phone.classList.remove("is-ringing");
@@ -201,7 +276,6 @@ DVP.register("01", {
       DVP.complete("01");
     };
     phone.addEventListener("click", onAnswer);
-    notice.addEventListener("click", onAnswer);
     phone.addEventListener("keydown", (e => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
@@ -263,6 +337,27 @@ function synthAnswer(ctx) {
   return () => {
     try {
       osc.stop();
+    } catch (e) {}
+  };
+}
+
+function synthPop(ctx) {
+  const t0 = ctx.currentTime;
+  const o = ctx.createOscillator();
+  o.type = "sine";
+  o.frequency.setValueAtTime(1318.5, t0);
+  o.frequency.exponentialRampToValueAtTime(1046.5, t0 + .1);
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(1e-4, t0);
+  g.gain.exponentialRampToValueAtTime(.09, t0 + .008);
+  g.gain.exponentialRampToValueAtTime(1e-4, t0 + .16);
+  o.connect(g);
+  g.connect(ctx.destination);
+  o.start(t0);
+  o.stop(t0 + .18);
+  return () => {
+    try {
+      o.stop();
     } catch (e) {}
   };
 }
