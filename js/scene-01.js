@@ -222,6 +222,8 @@ DVP.register("01", {
     if (msgMode) {
       root.classList.add("is-msg");
       document.documentElement.classList.add("is-msg");
+      const tc = document.querySelector('meta[name="theme-color"]');
+      if (tc) tc.setAttribute("content", "#000000");
       phone.removeAttribute("role");
       phone.removeAttribute("tabindex");
       phone.setAttribute("aria-hidden", "true");
