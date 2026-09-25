@@ -14,6 +14,11 @@ window.DVP = function() {
       return this.ctx;
     },
     async unlock() {
+      if (document.documentElement.classList.contains("is-msg") && navigator.audioSession) {
+        try {
+          navigator.audioSession.type = "playback";
+        } catch (e) {}
+      }
       this.prime();
       const ctx = this.context();
       if (ctx && ctx.state === "suspended") {
