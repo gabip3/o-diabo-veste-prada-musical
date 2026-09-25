@@ -133,6 +133,7 @@ DVP.register("01", {
     root.classList.add("is-gated");
     if (msgMode) {
       root.classList.add("is-msg");
+      document.documentElement.classList.add("is-msg");
       phone.removeAttribute("role");
       phone.removeAttribute("tabindex");
       phone.setAttribute("aria-hidden", "true");
