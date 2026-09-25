@@ -17,6 +17,7 @@ DVP.register("01", {
     const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
     const msgMode = new URLSearchParams(location.search).get("msg") === "1" || MSG_ON_TOUCH && isTouch;
     const T = Object.assign({}, this.timing);
+    if (msgMode) T.silence = 500;
     const phone = root.querySelector("#phone");
     const img = root.querySelector(".phone__img");
     const cue = root.querySelector("#cue");
@@ -124,7 +125,7 @@ DVP.register("01", {
       }), T.soundCueDelay);
       document.addEventListener("click", done);
       document.addEventListener("keydown", done);
-      if (msgMode) resolve();
+      if (msgMode) setTimeout(resolve, 6e3);
     }));
     let callStarted = false;
     const gated = true;
@@ -286,8 +287,8 @@ DVP.register("01", {
       await waitForEntry();
       if (gated) {
         root.classList.remove("is-gated");
-        if (msgMode) root.classList.add("is-awake");
-        await wait(1e3);
+        if (msgMode) root.classList.add("is-awake", "is-woke");
+        await wait(msgMode ? 0 : 1e3);
       }
       await wait(T.silence);
       callStarted = true;
