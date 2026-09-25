@@ -110,12 +110,46 @@ DVP.register("01", {
         if (fileEnded || t >= ringDuration()) finish();
       }), 40);
     }));
+    const callRing = {
+      on: false,
+      async start() {
+        if (this.on || answered) return;
+        this.on = true;
+        while (this.on) {
+          const ok = await ring.play(0);
+          if (!ok) {
+            this.on = false;
+            return;
+          }
+          T.ringPattern.forEach((([a, b]) => {
+            setTimeout((() => {
+              if (this.on) haptic(Math.round((b - a) * 1e3));
+            }), a * 1e3);
+          }));
+          await wait(Math.max(ringDuration() * 1e3, 2e3) + 900);
+        }
+      },
+      stop() {
+        this.on = false;
+        haptic(0);
+        ring.stop();
+      }
+    };
     const slideToAnswer = resolve => {
       const slide = root.querySelector("#call-slide");
       const knob = root.querySelector("#call-knob");
       const label = root.querySelector(".call__label");
       let x0 = null, dx = 0, max = 0, moved = false;
+      const onTap = () => {
+        document.removeEventListener("click", onTap);
+        if (callRing.on) return;
+        Audio.unlock().then((() => callRing.start()));
+      };
+      document.addEventListener("click", onTap);
+      setTimeout((() => callRing.start()), 900);
       const finish = () => {
+        document.removeEventListener("click", onTap);
+        callRing.stop();
         slide.removeEventListener("pointerdown", down);
         slide.removeEventListener("pointermove", move);
         slide.removeEventListener("pointerup", up);
