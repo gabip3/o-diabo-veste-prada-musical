@@ -119,11 +119,12 @@ DVP.register("01", {
         Audio.unlock();
         resolve();
       };
-      setTimeout((() => {
+      if (!msgMode) setTimeout((() => {
         cueSnd.classList.add("is-visible");
       }), T.soundCueDelay);
       document.addEventListener("click", done);
       document.addEventListener("keydown", done);
+      if (msgMode) resolve();
     }));
     let callStarted = false;
     const gated = true;
@@ -197,19 +198,48 @@ DVP.register("01", {
       cue.classList.add("is-visible");
       if (cursor) cursor.classList.add("is-hover");
       await new Promise((resolve => {
+        let y0 = null;
+        const nudge = setTimeout((() => {
+          cue.classList.add("is-nudge");
+          haptic([ 25, 60, 25 ]);
+        }), 2800);
         const go = () => {
+          clearTimeout(nudge);
           root.removeEventListener("click", go);
+          root.removeEventListener("wheel", onWheel);
+          root.removeEventListener("touchstart", onStart);
+          root.removeEventListener("touchend", onEnd);
           document.removeEventListener("keydown", onKey);
+          cue.classList.remove("is-nudge");
           resolve();
         };
         const onKey = e => {
-          if (e.key === "Enter" || e.key === " ") {
+          if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
             e.preventDefault();
             go();
           }
         };
+        const onWheel = e => {
+          if (Math.abs(e.deltaY) > 8) go();
+        };
+        const onStart = e => {
+          y0 = e.touches[0].clientY;
+        };
+        const onEnd = e => {
+          if (y0 !== null && y0 - e.changedTouches[0].clientY > 40) go();
+          y0 = null;
+        };
         setTimeout((() => {
           root.addEventListener("click", go);
+          root.addEventListener("wheel", onWheel, {
+            passive: true
+          });
+          root.addEventListener("touchstart", onStart, {
+            passive: true
+          });
+          root.addEventListener("touchend", onEnd, {
+            passive: true
+          });
           document.addEventListener("keydown", onKey);
         }), 500);
       }));
