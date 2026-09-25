@@ -26,10 +26,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Archivo:wght@400;500&family=Homemade+Apple&family=Permanent+Marker&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/base.css?v=20260924a">
-  <link rel="stylesheet" href="css/scene-01.css?v=20260924a">
-  <link rel="stylesheet" href="css/scene-02.css?v=20260924a">
-  <link rel="stylesheet" href="css/flow.css?v=20260924a">
+  <link rel="stylesheet" href="css/base.css?v=20260924b">
+  <link rel="stylesheet" href="css/scene-01.css?v=20260924b">
+  <link rel="stylesheet" href="css/scene-02.css?v=20260924b">
+  <link rel="stylesheet" href="css/flow.css?v=20260924b">
 </head>
 <body>
 
@@ -51,9 +51,16 @@
       </div>
     </figure>
 
-        <button class="notice" id="notice" type="button" aria-label="Abrir mensagem">
-      <span class="notice__in">
-        <span class="notice__meta"><span class="notice__from">Mensagem nova</span><span class="notice__time">agora</span></span>
+        <div class="lock" id="lock" aria-hidden="true">
+      <p class="lock__date">sexta-feira, 5 de setembro</p>
+      <p class="lock__time">07:42</p>
+    </div>
+    <button class="notice" id="notice" type="button" aria-label="Abrir mensagem">
+      <span class="notice__icon" aria-hidden="true">
+        <svg viewBox="0 0 38 38"><ellipse cx="19" cy="17.2" rx="11.6" ry="9.4" fill="#fff"/><path d="M9.2 29.6c2.5-.5 4.5-2 5.4-3.7l-4.4-3.5c-.3 2.4-.8 5.5-1 7.2z" fill="#fff"/></svg>
+      </span>
+      <span class="notice__text">
+        <span class="notice__row"><span class="notice__from">+1 (212) 555-0142</span><span class="notice__time">agora</span></span>
         <span class="notice__body">Andrea?</span>
       </span>
     </button>
@@ -222,12 +229,12 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="js/core.js?v=20260924a"></script>
-  <script src="js/scene-01.js?v=20260924a"></script>
-  <script src="js/scene-02.js?v=20260924a"></script>
-  <script src="js/flow.js?v=20260924a"></script>
-  <script src="js/flow-02.js?v=20260924a"></script>
-  <script src="js/flow-03.js?v=20260924a"></script>
-  <script src="js/flow-04.js?v=20260924a"></script>
+  <script src="js/core.js?v=20260924b"></script>
+  <script src="js/scene-01.js?v=20260924b"></script>
+  <script src="js/scene-02.js?v=20260924b"></script>
+  <script src="js/flow.js?v=20260924b"></script>
+  <script src="js/flow-02.js?v=20260924b"></script>
+  <script src="js/flow-03.js?v=20260924b"></script>
+  <script src="js/flow-04.js?v=20260924b"></script>
 </body>
 </html>

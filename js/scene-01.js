@@ -139,9 +139,6 @@ DVP.register("01", {
       let first = true;
       while (!answered) {
         notice.classList.add("is-in");
-        notice.classList.remove("is-buzz");
-        void notice.offsetWidth;
-        notice.classList.add("is-buzz");
         msgSnd.play(0);
         haptic(first ? [ 70, 90, 70, 220, 70, 90, 70 ] : [ 60, 80, 60 ]);
         if (first) {
@@ -158,6 +155,7 @@ DVP.register("01", {
       await waitForEntry();
       if (gated) {
         root.classList.remove("is-gated");
+        if (msgMode) root.classList.add("is-awake");
         await wait(1e3);
       }
       await wait(T.silence);
@@ -176,6 +174,7 @@ DVP.register("01", {
       if (answered || !callStarted) return;
       answered = true;
       if (msgMode) {
+        root.classList.add("is-unlocked");
         notice.classList.add("is-opened");
         notice.removeAttribute("data-cursor");
         notice.disabled = true;
