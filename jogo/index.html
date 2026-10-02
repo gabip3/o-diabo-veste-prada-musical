@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f3efe8">
+<title>O café da Miranda · teste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --paper:#f3efe8; --ink:#17140f; --red:#b0141c; --serif:"Libre Caslon Text","Times New Roman",serif; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; background: var(--paper); color: var(--ink); font-family: var(--serif); overflow: hidden; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+  .stage { position: relative; width: min(100vw, 960px); aspect-ratio: 800 / 360; }
+  canvas { width: 100%; height: 100%; display: block; }
+  .ov { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; pointer-events: none; transition: opacity .35s ease; padding: 0 6%; }
+  .ov.show { opacity: 1; pointer-events: auto; }
+  .ov h1 { font-weight: 400; font-size: clamp(22px, 5.6vw, 54px); letter-spacing: -.02em; line-height: 1; text-transform: uppercase; }
+  .ov h1 em { color: var(--red); font-style: normal; }
+  .ov p { margin-top: clamp(6px, 1.4vw, 14px); font-size: clamp(11px, 1.9vw, 17px); font-style: italic; color: rgba(23,20,15,.7); }
+  .ov .btn { margin-top: clamp(10px, 2.2vw, 22px); font: 400 clamp(11px, 1.7vw, 15px) var(--serif); letter-spacing: .34em; text-indent: .34em; text-transform: uppercase; padding: .9em 1.6em; border: 1px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+  .ov .btn:hover { background: var(--ink); color: var(--paper); }
+  #lose h1 { font-size: clamp(18px, 4.2vw, 40px); color: var(--red); }
+  .hint { margin-top: 10px; font-size: 12px; font-style: italic; color: rgba(23,20,15,.5); display: none; }
+  @media (orientation: portrait) { .hint { display: block; } }
+</style>
+</head>
+<body>
+<div class="stage">
+  <canvas id="cv" aria-label="Jogo: leve o café até a Miranda"></canvas>
+
+  <div class="ov show" id="start">
+    <h1>O café <em>da Miranda</em></h1>
+    <p>Leve o café até ela, sem derramar.</p>
+    <button class="btn" id="go" type="button">Pular para começar</button>
+    <p style="font-size:clamp(10px,1.5vw,13px);opacity:.7">toque ou barra de espaço</p>
+  </div>
+
+  <div class="ov" id="lose">
+    <h1>Derramou.</h1>
+    <p>Ela não vai gostar de saber.</p>
+    <button class="btn" id="retry" type="button">Outro café</button>
+  </div>
+
+  <div class="ov" id="end" style="justify-content:flex-end;padding-bottom:2.2%">
+    <button class="btn" id="again" type="button" style="margin-top:0;padding:.55em 1.2em">Jogar de novo</button>
+  </div>
+</div>
+<p class="hint">Fica melhor com o celular deitado.</p>
+<script src="jogo.js"></script>
+</body>
+</html>
